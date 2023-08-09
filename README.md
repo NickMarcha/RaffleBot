@@ -20,7 +20,8 @@ you can use `rafflebot/config.json` to get started
 | notifyUserList | users who are notified of things like raffle rolls in dgg chat | ["randomAdminUserOne", "randomAdminUserTwo"] |
 | statsURL | used for command | https://docs.google.com/spreadsheets/d/e/[spreadsheetID] |
 | againstMalariaURL| used for command | https://www.againstmalaria.com/[fundraiserID] |
-|watchedURL | used for command | https://docs.google.com/spreadsheets/d/e/[spreadsheetID] |
+| watchedURL | used for command | https://docs.google.com/spreadsheets/d/e/[spreadsheetID] |
+| messageThrottleTime | time between regular chat messages in seconds | `60` |
 
 ## Commands
 

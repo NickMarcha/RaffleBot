@@ -30,6 +30,8 @@ statsURL = config["statsURL"]
 againstMalariaURL = config["againstMalariaURL"]
 watchedURL = config["watchedURL"]
 
+messageThrottleTime = config["messageThrottleTime"]
+
 print("loaded config")
 
 ########################### Synchronized variables ###########################
@@ -230,7 +232,7 @@ async def run_SendMessages():
             print("sending message")
             print(msg)
             bot.send(msg)
-        await asyncio.sleep(60)
+        await asyncio.sleep(messageThrottleTime)
 
 
 # Run the dgg bot
