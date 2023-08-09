@@ -30,9 +30,9 @@ you can use `rafflebot/config.json` to get started
 **Aliases disabled atm**
 | command | description | aliases |
 | ---------- | -------------------------------- | ------- |
-| `#stats` | replies with `statsURL` | `s` |
-| `#donate` | replies with `againstMalariaURL` | `d` |
-| `#watched` | replies with `againstMalariaURL` | `w` |
+| `#amstats` | replies with `statsURL` | `s` |
+| `#amdonate` | replies with `againstMalariaURL` | `d` |
+| `#amwatched` | replies with `againstMalariaURL` | `w` |
 
 ### Whisper Chat
 
