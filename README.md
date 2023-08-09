@@ -12,16 +12,16 @@ mainly the Socket.io is serves.
 you can use `rafflebot/config.json` to get started
 | Property | Description | Example |
 | -------- | ------- | ------- |
-| botOwner | Your DGG Username | Barret |
-| botPrefix | Command prefix for dgg-bot | !rb
-| botSecret | Your Bots dgg login key, see [dgg/developer](https://www.destiny.gg/profile/developer) | 0imfnc8mVLWwsArandomrandomc8mVLWwsAawjYr4Rx |
-| raffleSocketURL | socket.io endpoint | raffledashboard.example.com/socket.io |
-| whiteListedUsers | users who can use commands and partake in private message broadcasts in dgg chat| [ "randomUserOne", "Barrett"] |
-| notifyUserList | users who are notified of things like raffle rolls in dgg chat | ["randomAdminUserOne", "randomAdminUserTwo"] |
-| statsURL | used for command | https://docs.google.com/spreadsheets/d/e/[spreadsheetID] |
-| againstMalariaURL| used for command | https://www.againstmalaria.com/[fundraiserID] |
-| watchedURL | used for command | https://docs.google.com/spreadsheets/d/e/[spreadsheetID] |
-| messageThrottleTime | time between regular chat messages in seconds | `60` |
+| `botOwner` | Your DGG Username | `Barret` |
+| `botPrefix` | Command prefix for dgg-bot | `!rb`
+| `botSecret` | Your Bots dgg login key, see [dgg/developer](https://www.destiny.gg/profile/developer) | `0imfnc8mVLWwsArandomrandomc8mVLWwsAawjYr4Rx` |
+| `raffleSocketURL` | socket.io endpoint | `raffledashboard.example.com/socket.io` |
+| `whiteListedUsers` | users who can use commands and partake in private message broadcasts in dgg chat| `["randomUserOne", "Barrett"]` |
+| `notifyUserList` | users who are notified of things like raffle rolls in dgg chat | `["randomAdminUserOne", "randomAdminUserTwo"]` |
+| `statsURL` | used for command | `https://docs.google.com/spreadsheets/d/e/[spreadsheetID]` |
+| `againstMalariaURL` | used for command | `https://www.againstmalaria.com/[fundraiserID]` |
+| `watchedURL` | used for command | `https://docs.google.com/spreadsheets/d/e/[spreadsheetID]` |
+| `messageThrottleTime` | time between regular chat messages in seconds | `60` |
 
 ## Commands
 
