@@ -154,14 +154,14 @@ def on_streaminfo(streaminfo: StreamInfo):
 ########################### Bot Command Handlers ###########################
 
 
-@bot.command(aliases=["st"])
+@bot.command(aliases=["s"])
 def stats(msg):
     print("stats " + msg.nick)
     if isWhiteListedWithHandler(msg):
         msg.reply("Stats: " + statsURL)
 
 
-@bot.command(aliases=["dn"])
+@bot.command(aliases=["d"])
 def donate(msg):
     print("donate " + msg.nick)
     if isWhiteListedWithHandler(msg):

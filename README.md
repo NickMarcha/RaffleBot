@@ -28,9 +28,9 @@ you can use `rafflebot/config.json` to get started
 
 | command       | description                      | aliases |
 | ------------- | -------------------------------- | ------- |
-| `!rb stats`   | replies with `statsURL`          | `st`    |
-| `!rb donate`  | replies with `againstMalariaURL` | `dn`    |
-| `!rb watched` | replies with `againstMalariaURL` | `wt`    |
+| `!rb stats`   | replies with `statsURL`          | `s`     |
+| `!rb donate`  | replies with `againstMalariaURL` | `d`     |
+| `!rb watched` | replies with `againstMalariaURL` | `w`     |
 
 ### Whisper Chat
 
