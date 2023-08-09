@@ -28,6 +28,7 @@ notifyUserList = config["notifyUserList"]
 
 statsURL = config["statsURL"]
 againstMalariaURL = config["againstMalariaURL"]
+watchedURL = config["watchedURL"]
 
 print("loaded config")
 
@@ -165,6 +166,13 @@ def donate(msg):
     print("donate " + msg.nick)
     if isWhiteListedWithHandler(msg):
         msg.reply("Donate: " + againstMalariaURL)
+
+
+@bot.command(aliases=["w"])
+def watched(msg):
+    print("watched " + msg.nick)
+    if isWhiteListedWithHandler(msg):
+        msg.reply("Watched: " + watchedURL)
 
 
 ########################### Bot Event Handlers ###########################
