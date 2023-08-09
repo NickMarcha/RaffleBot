@@ -199,8 +199,8 @@ def on_refresh(msg):
 def on_privmsg(msg):
     print("on_privmsg")
     if isWhiteListed:
-        if msg.split()[0] == "!bc":
-            bcmsg = msg[4:]
+        if msg.data.split()[0] == "#bc":
+            bcmsg = msg.data[4:]
             dgg_whisper_broadcast_whitelist(msg.nick + ": " + bcmsg)
         else:
             bot.send_privmsg(msg.nick, "You can broadcast messages with !bc <message>")
@@ -210,7 +210,7 @@ def on_privmsg(msg):
             "FeelsDankMan I'm a bot. I'm not allowed to reply to private messages. Maybe try gpt71?",
         )
 
-    bot.send_privmsg(botOwner, msg.nick + " sent a private message: " + msg.content)
+    bot.send_privmsg(botOwner, msg.nick + " sent a private message: " + msg.data)
 
 
 ########################### Running Threads  ###########################
