@@ -57,6 +57,7 @@ def isWhiteListed(nick):
         return False
 
 
+# Checks if user is whitelisted, if not, clarifying whisper to user
 def isWhiteListedWithHandler(msg):
     if isWhiteListed(msg.nick):
         return True
@@ -69,6 +70,7 @@ def isWhiteListedWithHandler(msg):
         return False
 
 
+# Sends a message to all users in a list
 def dgg_whisper_broadcast(msg, users):
     for user in users:
         bot.send_privmsg(msg, user)
@@ -95,6 +97,7 @@ async def ping(data):
     print("ping received with ", data)
 
 
+# Sends a message in dggchat when a user donates
 @sio.event
 async def donations(data):
     msg = (
@@ -109,6 +112,7 @@ async def donations(data):
     messageQueue.put(msg)
 
 
+# Custom message sent in dgg chat, currently used for "RaffleRoll:SendResults"  on frontend
 @sio.event
 async def broadcast(data):
     msg = data["message"]
@@ -116,6 +120,7 @@ async def broadcast(data):
     messageQueue.put(msg)
 
 
+# dgg whisper broadcast message to all users in notifyUserList
 @sio.event
 async def raffle(data):
     msg = (
@@ -136,6 +141,7 @@ async def disconnect():
 
 
 ########################### Live Bot Event Handlers ###########################
+# determines whether destiny is streaming
 
 
 @live.event()
@@ -152,6 +158,7 @@ def on_streaminfo(streaminfo: StreamInfo):
 
 
 ########################### Bot Command Handlers ###########################
+# only allowed whitelisted users can use these commands
 
 
 @bot.command(aliases=["s"])
@@ -178,12 +185,14 @@ def watched(msg):
 ########################### Bot Event Handlers ###########################
 
 
+# trying to figure out what this does LUL
 @bot.event()
 def on_refresh(msg):
     print("on_refresh")
     print(msg)
 
 
+# Handle private messages towards the bot
 @bot.event()
 def on_privmsg(msg):
     print("on_privmsg")
@@ -205,6 +214,7 @@ def on_privmsg(msg):
 ########################### Running Threads  ###########################
 
 
+# Connect to Socket.io server
 async def run_socket():
     print("Connecting to socket")
     await sio.connect(raffleSocketURL)
@@ -214,6 +224,7 @@ async def run_socket():
 # Send messages from the queue every 60 seconds
 async def run_SendMessages():
     while True:
+        # If there is a message in the queue and destiny is not live, send the message
         if not messageQueue.empty() and not destinyIsLive:
             msg = messageQueue.get()
             print("sending message")
@@ -222,16 +233,19 @@ async def run_SendMessages():
         await asyncio.sleep(60)
 
 
+# Run the dgg bot
 def run_bot():
     print("running bot")
     bot.run_forever()
 
 
+# Run the dgg live bot
 def run_live_bot():
     print("running live bot")
     live.run_forever()
 
 
+# Run the socket and message sending in parallel
 async def aioMain():
     taskSocket = asyncio.create_task(run_socket())
     taskMessages = asyncio.create_task(run_SendMessages())
@@ -241,10 +255,10 @@ async def aioMain():
 
 
 if __name__ == "__main__":
-    # dggBto does not support asyncio, so we need to run it in a thread
+    # dggBot does not support asyncio, so we need to run it in a thread
     bot_thread = threading.Thread(target=run_bot)
     bot_thread.start()
-
+    # dggLive does not support asyncio, so we need to run it in a thread
     live_bot_thread = threading.Thread(target=run_live_bot)
     live_bot_thread.start()
 
