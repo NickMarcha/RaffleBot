@@ -1,0 +1,3 @@
+dgg-bot==0.15.0
+python-socketio==5.8.0
+asyncio==3.4.3
