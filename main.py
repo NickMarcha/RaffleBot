@@ -163,22 +163,22 @@ def on_streaminfo(streaminfo: StreamInfo):
 # only allowed whitelisted users can use these commands
 
 
-@bot.command(aliases=["s"])
-def stats(msg):
+@bot.command()
+def amstats(msg):
     print("stats " + msg.nick)
     if isWhiteListedWithHandler(msg):
         msg.reply("Stats: " + statsURL)
 
 
-@bot.command(aliases=["d"])
-def donate(msg):
+@bot.command()
+def amdonate(msg):
     print("donate " + msg.nick)
     if isWhiteListedWithHandler(msg):
         msg.reply("Donate: " + againstMalariaURL)
 
 
-@bot.command(aliases=["w"])
-def watched(msg):
+@bot.command()
+def amwatched(msg):
     print("watched " + msg.nick)
     if isWhiteListedWithHandler(msg):
         msg.reply("Watched: " + watchedURL)
