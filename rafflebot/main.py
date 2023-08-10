@@ -129,7 +129,7 @@ async def raffle(data):
         "Raffle was rolled| sponsor: "
         + data["sponsor"]
         + " amount:"
-        + data["amount"]
+        + str(data["amount"])
         + " message:"
         + data["message"]
     )
