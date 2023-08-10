@@ -6,5 +6,7 @@ services:
       dockerfile: docker/Dockerfile  # Specify the path to the Dockerfile within the context
     image: python-app
     container_name: raffle-bot-container
-#    volumes:
-#      - ../rafflebot:/app
+    environment:
+      - CONFIG_FILE_PATH=/path/to/config.json
+    volumes:
+      - ${CONFIG_FILE_PATH}:/rafflebot/config.json
