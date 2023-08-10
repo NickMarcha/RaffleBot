@@ -8,13 +8,15 @@ WORKDIR /app
 COPY ../requirements.txt .
 
 # Copy the requirements file into the container
-COPY ../config.json .
+COPY ../config.json ./app
 
 # Install application dependencies
 RUN pip install -r requirements.txt
 
+
 # Copy the application code into the container
 COPY . .
 
+ENV LOGLEVEL=DEBUG
 # Run the Python script
 CMD ["python", "main.py"]

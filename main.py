@@ -5,6 +5,7 @@ from dggbot import DGGBot, DGGLive
 from dggbot.live import StreamInfo
 from queue import Queue
 import json
+import time
 import datetime
 
 current_timestamp = datetime.datetime.now()
@@ -110,7 +111,7 @@ async def donations(data):
         + data["sponsor"]
         + " for donating "
         + data["amount"]
-        + " USD with the message: "
+        + " with the message: "
         + data["message"]
     )
     print("queueing donation message")
@@ -240,8 +241,14 @@ async def run_SendMessages():
 
 # Run the dgg bot
 def run_bot():
-    print("running bot")
-    bot.run_forever()
+    while True:
+        try:
+            print("connecting bot")
+            bot.run_forever()
+            break
+        except:
+            print("failed to connect bot, retrying in 30 seconds")
+            time.sleep(30)
 
 
 # Run the dgg live bot
