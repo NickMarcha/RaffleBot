@@ -2,7 +2,7 @@
 FROM python:3.11
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /rafflebot
 
 # Copy the requirements file into the container
 COPY ../requirements.txt .
