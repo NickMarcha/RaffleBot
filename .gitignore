@@ -4,3 +4,4 @@ __pycache__
 config.json
 monthly_tokens.json
 quickdraw_record.json
+app.log

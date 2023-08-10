@@ -7,9 +7,21 @@ from queue import Queue
 import json
 import time
 import datetime
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,  # Set the logging level to DEBUG
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler("app.log"),
+        logging.StreamHandler(),
+    ],
+)
+
+logger = logging.getLogger(__name__)
 
 current_timestamp = datetime.datetime.now()
-print("Starting: ", current_timestamp)
+logger.info("Starting: %s", current_timestamp)
 ########################### Config ###########################
 config_path = "config.json"
 
@@ -36,11 +48,12 @@ watchedURL = config["watchedURL"]
 
 messageThrottleTime = config["messageThrottleTime"]
 
-print("loaded config")
+logger.info("loaded config")
 
 ########################### Synchronized variables ###########################
 messageQueue = Queue()
 destinyIsLive = False
+last_message_time = time.time()
 
 ########################### Initialization ###########################
 bot = DGGBot(
@@ -51,7 +64,9 @@ bot = DGGBot(
 
 live = DGGLive()
 
-sio = socketio.AsyncClient()  # (logger=True, engineio_logger=True)
+sio = socketio.AsyncClient(
+    reconnection=True, reconnection_delay_max=60
+)  # (logger=True, engineio_logger=True)
 
 ########################### Helper Functions ###########################
 
@@ -95,12 +110,12 @@ def dgg_whisper_broadcast_notify(msg):
 
 @sio.event
 async def connect():
-    print("connection established")
+    logger.info("connection established")
 
 
 @sio.event
 async def ping(data):
-    print("ping received with ", data)
+    logger.info("ping received with %s", str(data))
 
 
 # Sends a message in dggchat when a user donates
@@ -114,7 +129,7 @@ async def donations(data):
         + " with the message: "
         + data["message"]
     )
-    print("queueing donation message")
+    logger.info("queueing donation message")
     messageQueue.put(msg)
 
 
@@ -122,7 +137,7 @@ async def donations(data):
 @sio.event
 async def broadcast(data):
     msg = data["message"]
-    print("queueing broadcast message")
+    logger.info("queueing broadcast message %s", str(msg))
     messageQueue.put(msg)
 
 
@@ -143,7 +158,7 @@ async def raffle(data):
 
 @sio.event
 async def disconnect():
-    print("disconnected from server")
+    logger.warning("disconnected from server")
 
 
 ########################### Live Bot Event Handlers ###########################
@@ -155,11 +170,11 @@ def on_streaminfo(streaminfo: StreamInfo):
     global destinyIsLive  # Declare destinyIsLive as a global variable
 
     if streaminfo.is_live() and not destinyIsLive:
-        print("Destiny is live")
+        logger.info("Destiny is live")
         destinyIsLive = True
 
     if not streaminfo.is_live() and destinyIsLive:
-        print("Destiny is not live")
+        logger.info("Destiny is not live")
         destinyIsLive = False
 
 
@@ -169,21 +184,21 @@ def on_streaminfo(streaminfo: StreamInfo):
 
 @bot.command()
 def amstats(msg):
-    print("stats " + msg.nick)
+    logger.info("stats " + msg.nick)
     if isWhiteListedWithHandler(msg):
         msg.reply("Stats: " + statsURL)
 
 
 @bot.command()
 def amdonate(msg):
-    print("donate " + msg.nick)
+    logger.info("donate " + msg.nick)
     if isWhiteListedWithHandler(msg):
         msg.reply("Donate: " + againstMalariaURL)
 
 
 @bot.command()
 def amwatched(msg):
-    print("watched " + msg.nick)
+    logger.info("watched " + msg.nick)
     if isWhiteListedWithHandler(msg):
         msg.reply("Watched: " + watchedURL)
 
@@ -194,14 +209,22 @@ def amwatched(msg):
 # trying to figure out what this does LUL
 @bot.event()
 def on_refresh(msg):
-    print("on_refresh")
-    print(msg)
+    logger.info("on_refresh")
+    logger.info(msg)
+
+
+# Leaving this here for debug purposes
+# @bot.event()
+# def on_msg(msg):
+#     if msg.nick == "StrawWaffle":
+#         print("StrawWaffle")
+#         print(msg.data)
 
 
 # Handle private messages towards the bot
 @bot.event()
 def on_privmsg(msg):
-    print("on_privmsg")
+    logger.info("on_privmsg")
     if isWhiteListed:
         if msg.data.split()[0] == "#bc":
             bcmsg = msg.data[4:]
@@ -222,20 +245,25 @@ def on_privmsg(msg):
 
 # Connect to Socket.io server
 async def run_socket():
-    print("Connecting to socket")
+    logger.info("Connecting to socket")
     await sio.connect(raffleSocketURL)
     await sio.wait()
 
 
 # Send messages from the queue every 60 seconds
 async def run_SendMessages():
+    global last_message_time
     while True:
         # If there is a message in the queue and destiny is not live, send the message
         if not messageQueue.empty() and not destinyIsLive:
-            msg = messageQueue.get()
-            print("sending message")
-            print(msg)
-            bot.send(msg)
+            current_time = time.time()
+            time_since_last_message = current_time - last_message_time
+            if time_since_last_message > messageThrottleTime:  # Throttle messages
+                msg = messageQueue.get()
+                logger.info("sending message")
+                logger.info(msg)
+                bot.send(msg)
+                last_message_time = time.time()
         await asyncio.sleep(messageThrottleTime)
 
 
@@ -244,11 +272,11 @@ def run_bot():
     global bot  # Declare destinyIsLive as a global variable
     while True:
         try:
-            print("connecting bot")
+            logger.info("connecting bot")
             bot.run_forever()
             break
         except:
-            print("failed to connect bot, retrying in 30 seconds")
+            logger.error("failed to connect bot, retrying in 30 seconds")
             bot = DGGBot(
                 botSecret,
                 owner=botOwner,
@@ -259,7 +287,7 @@ def run_bot():
 
 # Run the dgg live bot
 def run_live_bot():
-    print("running live bot")
+    logger.info("running live bot")
     live.run_forever()
 
 
