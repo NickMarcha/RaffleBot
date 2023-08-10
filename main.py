@@ -5,7 +5,10 @@ from dggbot import DGGBot, DGGLive
 from dggbot.live import StreamInfo
 from queue import Queue
 import json
+import datetime
 
+current_timestamp = datetime.datetime.now()
+print("Starting: ", current_timestamp)
 ########################### Config ###########################
 config_path = "config.json"
 

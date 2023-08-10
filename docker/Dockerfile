@@ -14,7 +14,7 @@ COPY ../config.json .
 RUN pip install -r requirements.txt
 
 # Copy the application code into the container
-COPY ../rafflebot .
+COPY . .
 
 # Run the Python script
 CMD ["python", "main.py"]
