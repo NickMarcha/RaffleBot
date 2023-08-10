@@ -27,12 +27,13 @@ you can use `rafflebot/config.json` to get started
 
 ### General Chat
 
-**Aliases disabled atm**
-| command | description | aliases |
-| ---------- | -------------------------------- | ------- |
-| `#amstats` | replies with `statsURL` | `s` |
-| `#amdonate` | replies with `againstMalariaURL` | `d` |
-| `#amwatched` | replies with `againstMalariaURL` | `w` |
+| command      | description                      | aliases |
+| ------------ | -------------------------------- | ------- |
+| `#amstats`   | replies with `statsURL`          | `s`     |
+| `#amdonate`  | replies with `againstMalariaURL` | `d`     |
+| `#amwatched` | replies with `againstMalariaURL` | `w`     |
+
+Note: **Aliases disabled atm**
 
 ### Whisper Chat
 
