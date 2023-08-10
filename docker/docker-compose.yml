@@ -9,4 +9,4 @@ services:
     environment:
       - CONFIG_FILE_PATH=/path/to/config.json
     volumes:
-      - ${CONFIG_FILE_PATH}:/rafflebot/config.json
+      - ${CONFIG_FILE_PATH}:/config.json
