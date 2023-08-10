@@ -1,7 +1,17 @@
+# Use an official Python runtime as the base image
 FROM python:3.11
-WORKDIR /rafflebot
-COPY requirements.txt .
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the requirements file into the container
+COPY ../requirements.txt .
+
+# Install application dependencies
 RUN pip install -r requirements.txt
-COPY . .
-ENV LOGLEVEL=DEBUG
-ENTRYPOINT ["python", "rafflebot/main.py"]
+
+# Copy the application code into the container
+COPY ../rafflebot .
+
+# Run the Python script
+CMD ["python", "main.py"]

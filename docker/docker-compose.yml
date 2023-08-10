@@ -5,4 +5,4 @@ services:
     image: python-app
     container_name: raffle-bot-container
     volumes:
-      - /rafflebot/config.json:/rafflebot/config.json
+      - ../rafflebot:/app
