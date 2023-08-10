@@ -4,4 +4,4 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .
 ENV LOGLEVEL=DEBUG
-ENTRYPOINT ["python", "main.py"]
+ENTRYPOINT ["python", "rafflebot/main.py"]
