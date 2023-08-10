@@ -8,7 +8,7 @@ WORKDIR /app
 COPY ../requirements.txt .
 
 # Copy the requirements file into the container
-COPY ../config.json ./app
+COPY ../config.json .
 
 # Install application dependencies
 RUN pip install -r requirements.txt

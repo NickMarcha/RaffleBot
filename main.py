@@ -241,6 +241,7 @@ async def run_SendMessages():
 
 # Run the dgg bot
 def run_bot():
+    global bot  # Declare destinyIsLive as a global variable
     while True:
         try:
             print("connecting bot")
@@ -248,6 +249,11 @@ def run_bot():
             break
         except:
             print("failed to connect bot, retrying in 30 seconds")
+            bot = DGGBot(
+                botSecret,
+                owner=botOwner,
+                prefix=botPrefix,
+            )
             time.sleep(30)
 
 
