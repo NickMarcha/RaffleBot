@@ -7,7 +7,7 @@ from queue import Queue
 import json
 
 ########################### Config ###########################
-config_path = "rafflebot/config.json"
+config_path = "config.json"
 
 
 def load_json(file_path):
