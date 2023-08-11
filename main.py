@@ -294,7 +294,6 @@ def run_live_bot():
     live.run_forever()
 
 
-# Run the socket and message sending in parallel
 async def aioMain():
     taskSocket = asyncio.create_task(run_socket())
     taskMessages = asyncio.create_task(run_SendMessages())
@@ -303,12 +302,13 @@ async def aioMain():
     await taskSocket
 
 
-if __name__ == "__main__":
-    # dggBot does not support asyncio, so we need to run it in a thread
-    bot_thread = threading.Thread(target=run_bot)
-    bot_thread.start()
-    # dggLive does not support asyncio, so we need to run it in a thread
-    live_bot_thread = threading.Thread(target=run_live_bot)
-    live_bot_thread.start()
+async def main():
+    bot_thread = asyncio.to_thread(run_bot)
 
-    asyncio.run(aioMain())
+    live_bot_thread = asyncio.to_thread(run_live_bot)
+
+    await asyncio.gather(bot_thread, live_bot_thread, aioMain())
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
