@@ -9,5 +9,5 @@ services:
     environment:
       - CONFIG_FILE_PATH=path/to/config.json
     volumes:
-      - /config.json:/config/config.json
+      - ${CONFIG_FILE_PATH}:/config/config.json
 
