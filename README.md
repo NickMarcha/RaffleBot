@@ -47,10 +47,10 @@ Whisper RaffleBot to use these
 use this section in `main.py` to connect to developer environment
 
 ```python
-11 ########################### Version ###########################
-12 DEVELOPMENT = False
-13 #DEVELOPMENT = True
-14 versionNumber = "0.0.2"
+########################### Version ###########################    #[11]
+DEVELOPMENT = False                                                #[12]
+#DEVELOPMENT = True                                                #[13]
+versionNumber = "0.0.2"                                            #[14]
 ```
 
 ### Developer Config
