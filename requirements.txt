@@ -1,4 +1,4 @@
-dgg-bot==0.15.0
+dgg-bot==1.2.2
 python-socketio==5.8.0
 asyncio==3.4.3
 aiohttp==3.8.5

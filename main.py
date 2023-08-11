@@ -1,6 +1,5 @@
 import asyncio
 import socketio
-import threading
 from dggbot import DGGBot, DGGLive
 from dggbot.live import StreamInfo
 from queue import Queue
@@ -22,7 +21,7 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-current_timestamp = datetime.datetime.now()
+current_timestamp = datetime.datetime.now() - datetime.timedelta(seconds=60)
 logger.info("Starting: %s", current_timestamp)
 logger.info("Version: %s", versionNumber)
 ########################### Config ###########################
@@ -51,6 +50,14 @@ watchedURL = config["watchedURL"]
 
 messageThrottleTime = config["messageThrottleTime"]
 
+DEVELOPMENT = False
+
+try:
+    DEVELOPMENT = config["DEVELOPMENT"]
+except NameError:
+    DEVELOPMENT = False
+
+
 logger.info("loaded config")
 
 ########################### Synchronized variables ###########################
@@ -64,11 +71,31 @@ bot = DGGBot(
     owner=botOwner,
     prefix=botPrefix,
 )
+if DEVELOPMENT:
+    bot = DGGBot(
+        botSecret,
+        owner=botOwner,
+        prefix=botPrefix,
+        sid="SID",
+        rememberme="REMEMBERME",
+        config={
+            "wss": "wss://chat.omniliberal.dev/ws",
+            "wss-origin": "https://www.omniliberal.dev",
+            "baseurl": "https://www.omniliberal.dev",
+            "endpoints": {"user": "/api/chat/me", "userinfo": "/api/userinfo"},
+            "flairs": "https://cdn.omniliberal.dev/flairs/flairs.json",
+        },
+    )
 
 live = DGGLive()
 
 sio = socketio.AsyncClient(
-    reconnection=True, reconnection_delay_max=60
+    reconnection=True,
+    reconnection_attempts=0,
+    reconnection_delay=1,
+    reconnection_delay_max=5,
+    randomization_factor=0.5,
+    handle_sigint=True,
 )  # (logger=True, engineio_logger=True)
 
 ########################### Helper Functions ###########################
@@ -219,8 +246,8 @@ def on_refresh(msg):
 # Leaving this here for debug purposes
 @bot.event()
 def on_msg(msg):
-    if msg.nick == "StrawWaffle":
-        print("StrawWaffle")
+    if msg.nick == botOwner:
+        print(botOwner)
         print(msg.data)
 
 
@@ -273,19 +300,8 @@ async def run_SendMessages():
 # Run the dgg bot
 def run_bot():
     global bot  # Declare destinyIsLive as a global variable
-    while True:
-        try:
-            logger.info("connecting bot")
-            bot.run_forever()
-            break
-        except:
-            logger.error("failed to connect bot, retrying in 30 seconds")
-            bot = DGGBot(
-                botSecret,
-                owner=botOwner,
-                prefix=botPrefix,
-            )
-            time.sleep(30)
+    logger.info("connecting bot")
+    bot.run_forever()
 
 
 # Run the dgg live bot
