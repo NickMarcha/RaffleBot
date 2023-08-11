@@ -9,7 +9,8 @@ mainly the Socket.io is serves.
 
 ## Config
 
-you can use `rafflebot/config.json` to get started
+should be at `config/config.json`
+You can use `config/copy.config.json` to get started
 | Property | Description | Example |
 | -------- | ------- | ------- |
 | `botOwner` | Your DGG Username | `Barret` |
@@ -29,15 +30,30 @@ you can use `rafflebot/config.json` to get started
 
 | command      | description                      | aliases |
 | ------------ | -------------------------------- | ------- |
-| `#amstats`   | replies with `statsURL`          | `s`     |
-| `#amdonate`  | replies with `againstMalariaURL` | `d`     |
-| `#amwatched` | replies with `againstMalariaURL` | `w`     |
-
-Note: **Aliases disabled atm**
+| `#amstats`   | replies with `statsURL`          | `#ams`  |
+| `#amdonate`  | replies with `againstMalariaURL` | `#amd`  |
+| `#amwatched` | replies with `againstMalariaURL` | `#amw`  |
 
 ### Whisper Chat
 
+Note: **Whisper disabled atm**
 Whisper RaffleBot to use these
 | command | description |
 | -------- | ------- |
 | `#bc <msg>`| sends a whisper from RaffleBot to all whitelisted users with your username prefixed |
+
+## Developer
+
+use this section in `main.py` to connect to developer environment
+
+```python
+11 ########################### Version ###########################
+12 DEVELOPMENT = False
+13 #DEVELOPMENT = True
+14 versionNumber = "0.0.2"
+```
+
+### Developer Config
+
+should be at `config/dev.config.json`
+You can use `config/copy.dev.config.json` to get started

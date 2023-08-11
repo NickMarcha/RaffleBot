@@ -2,8 +2,9 @@ __pycache__
 .DS_Store
 .vscode
 config.json
-config.json.prod
-config.json.dev
+dev.config.json
+prod.config.json
 monthly_tokens.json
 quickdraw_record.json
 app.log
+dev.log

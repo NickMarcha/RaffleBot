@@ -1,18 +1,12 @@
 {
   "botOwner": "Your DGG Username",
-  "botPrefix": "!r",
-  "botSecret": "Your Bots dgg login key, see https://www.destiny.gg/profile/developer ",
+  "botPrefix": "#",
+  "botSecret": "Your Bots dgg login key, see https://www.destiny.gg/profile/developer",
   "raffleSocketURL": "raffledashboard.example.com/socket.io",
-  "whiteListedUsers": [
-    "randomUserOne",
-    "Barrett"
-  ],
-  "notifyUserList": [
-    "randomAdminUserOne",
-    "randomAdminUserTwo"
-  ],
+  "whiteListedUsers": ["randomUserOne", "Barrett"],
+  "notifyUserList": ["randomAdminUserOne", "randomAdminUserTwo"],
   "statsURL": "https://docs.google.com/spreadsheets/d/e/[spreadsheetID]",
   "againstMalariaURL": "https://www.againstmalaria.com/[fundraiserID]",
   "watchedURL": "https://docs.google.com/spreadsheets/d/[spreadsheetID]",
-   "messageThrottleTime": 60
+  "messageThrottleTime": 15
 }

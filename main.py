@@ -8,24 +8,37 @@ import time
 import datetime
 import logging
 
-versionNumber = "0.0.1"
+########################### Version ###########################
+DEVELOPMENT = False
+# DEVELOPMENT = True
+versionNumber = "0.0.2"
+
+
 ########################### Logging ###########################
+if DEVELOPMENT:
+    logFilePath = "logs/dev.log"
+else:
+    logFilePath = "logs/app.log"
+
 logging.basicConfig(
-    level=logging.INFO,  # Set the logging level to DEBUG
+    level=logging.DEBUG,  # Set the logging level to DEBUG
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler("/logs/app.log"),
+        logging.FileHandler(logFilePath, encoding="utf-8"),
         logging.StreamHandler(),
     ],
 )
 
 logger = logging.getLogger(__name__)
 
-current_timestamp = datetime.datetime.now() - datetime.timedelta(seconds=60)
-logger.info("Starting: %s", current_timestamp)
 logger.info("Version: %s", versionNumber)
+logger.info("Development: %s", DEVELOPMENT)
+
 ########################### Config ###########################
-config_path = "config/config.json"
+if DEVELOPMENT:
+    config_path = "config/dev.config.json"
+else:
+    config_path = "config/config.json"
 
 
 def load_json(file_path):
@@ -50,14 +63,10 @@ watchedURL = config["watchedURL"]
 
 messageThrottleTime = config["messageThrottleTime"]
 
-DEVELOPMENT = False
-
-try:
-    DEVELOPMENT = config["DEVELOPMENT"]
-except NameError:
-    DEVELOPMENT = False
-
-
+current_timestamp = datetime.datetime.now() - datetime.timedelta(
+    seconds=messageThrottleTime
+)
+logger.info("Starting: %s", current_timestamp)
 logger.info("loaded config")
 
 ########################### Synchronized variables ###########################
@@ -71,13 +80,12 @@ bot = DGGBot(
     owner=botOwner,
     prefix=botPrefix,
 )
+
 if DEVELOPMENT:
     bot = DGGBot(
         botSecret,
         owner=botOwner,
         prefix=botPrefix,
-        sid="SID",
-        rememberme="REMEMBERME",
         config={
             "wss": "wss://chat.omniliberal.dev/ws",
             "wss-origin": "https://www.omniliberal.dev",
@@ -96,7 +104,9 @@ sio = socketio.AsyncClient(
     reconnection_delay_max=5,
     randomization_factor=0.5,
     handle_sigint=True,
-)  # (logger=True, engineio_logger=True)
+    logger=True,
+    engineio_logger=True,
+)
 
 ########################### Helper Functions ###########################
 
@@ -113,26 +123,29 @@ def isWhiteListedWithHandler(msg):
     if isWhiteListed(msg.nick):
         return True
     else:
-        bot.send_privmsg(
-            "You are not whitelisted. If you believe this is a mistake, contact "
-            + botOwner,
-            msg.nick,
-        )
+        # TODO: re-enable this when the bot is old enough to whisper
+        # disabled until the bot is old enough to whisper
+        #    bot.send_privmsg(
+        #        "You are not whitelisted. If you believe this is a mistake, contact "
+        #        + botOwner,
+        #        msg.nick,
+        #    )
         return False
 
 
+# TODO: re-enable this when the bot is old enough to whisper
 # Sends a message to all users in a list
-def dgg_whisper_broadcast(msg, users):
-    for user in users:
-        bot.send_privmsg(msg, user)
+# def dgg_whisper_broadcast(msg, users):
+#    for user in users:
+#        bot.send_privmsg(msg, user)
 
+# TODO: re-enable this when the bot is old enough to whisper
+# def dgg_whisper_broadcast_whitelist(msg):
+#    dgg_whisper_broadcast(msg, whiteListedUsers)
 
-def dgg_whisper_broadcast_whitelist(msg):
-    dgg_whisper_broadcast(msg, whiteListedUsers)
-
-
-def dgg_whisper_broadcast_notify(msg):
-    dgg_whisper_broadcast(msg, notifyUserList)
+# TODO: re-enable this when the bot is old enough to whisper
+# def dgg_whisper_broadcast_notify(msg):
+#    dgg_whisper_broadcast(msg, notifyUserList)
 
 
 ########################### Websocket Event Handlers ###########################
@@ -151,16 +164,23 @@ async def ping(data):
 # Sends a message in dggchat when a user donates
 @sio.event
 async def donations(data):
-    msg = (
-        "Klappa "
-        + data["sponsor"]
-        + " for donating "
-        + data["amount"]
-        + " with the message: "
-        + data["message"]
-    )
-    logger.info("queueing donation message")
-    messageQueue.put(msg)
+    if data is not None and "sponsor" in data:
+        msg = (
+            "Klappa "
+            + data["sponsor"]
+            + " for donating "
+            + data["amount"]
+            + " with the message: "
+            + data["message"]
+        )
+        logger.info("queueing donation message")
+        messageQueue.put(msg)
+    else:
+        # Handle the case when data is None or "sponsor" is missing
+        logger.warn(
+            "Received null object, bug on node backend"
+        )  # this is when the dev DB is missing data due to not being updated actively, run MultiPageScrape
+        pass
 
 
 # Custom message sent in dgg chat, currently used for "RaffleRoll:SendResults"  on frontend
@@ -171,19 +191,20 @@ async def broadcast(data):
     messageQueue.put(msg)
 
 
+# TODO: re-enable this when the bot is old enough to whisper
 # dgg whisper broadcast message to all users in notifyUserList
-@sio.event
-async def raffle(data):
-    msg = (
-        "Raffle was rolled| sponsor: "
-        + data["sponsor"]
-        + " amount:"
-        + str(data["amount"])
-        + " message:"
-        + data["message"]
-    )
+# @sio.event
+# async def raffle(data):
+#    msg = (
+#        "Raffle was rolled| sponsor: "
+#        + data["sponsor"]
+#        + " amount:"
+#        + str(data["amount"])
+#        + " message:"
+#        + data["message"]
+#    )
 
-    dgg_whisper_broadcast_notify(msg)
+#    dgg_whisper_broadcast_notify(msg)
 
 
 @sio.event
@@ -212,21 +233,21 @@ def on_streaminfo(streaminfo: StreamInfo):
 # only allowed whitelisted users can use these commands
 
 
-@bot.command()
+@bot.command(aliases=["ams"])
 def amstats(msg):
     logger.info("stats " + msg.nick)
     if isWhiteListedWithHandler(msg):
         msg.reply("Stats: " + statsURL)
 
 
-@bot.command()
+@bot.command(alias=["amd"])
 def amdonate(msg):
     logger.info("donate " + msg.nick)
     if isWhiteListedWithHandler(msg):
         msg.reply("Donate: " + againstMalariaURL)
 
 
-@bot.command()
+@bot.command(aliases=["amw"])
 def amwatched(msg):
     logger.info("watched " + msg.nick)
     if isWhiteListedWithHandler(msg):
@@ -251,23 +272,24 @@ def on_msg(msg):
         print(msg.data)
 
 
+# TODO: re-enable this when the bot is old enough to whisper
 # Handle private messages towards the bot
-@bot.event()
-def on_privmsg(msg):
-    logger.info("on_privmsg")
-    if isWhiteListed:
-        if msg.data.split()[0] == "#bc":
-            bcmsg = msg.data[4:]
-            dgg_whisper_broadcast_whitelist(msg.nick + ": " + bcmsg)
-        else:
-            bot.send_privmsg(msg.nick, "You can broadcast messages with !bc <message>")
-    else:
-        bot.send_privmsg(
-            msg.nick,
-            "FeelsDankMan I'm a bot. I'm not allowed to reply to private messages. Maybe try gpt71?",
-        )
-
-    bot.send_privmsg(botOwner, msg.nick + " sent a private message: " + msg.data)
+# @bot.event()
+# def on_privmsg(msg):
+#    logger.info("on_privmsg")
+#    if isWhiteListed:
+#        if msg.data.split()[0] == "#bc":
+#            bcmsg = msg.data[4:]
+#            dgg_whisper_broadcast_whitelist(msg.nick + ": " + bcmsg)
+#        else:
+#            bot.send_privmsg(msg.nick, "You can broadcast messages with !bc <message>")
+#    else:
+#        bot.send_privmsg(
+#            msg.nick,
+#            "FeelsDankMan I'm a bot. I'm not allowed to reply to private messages. Maybe try gpt71?",
+#        )
+#
+#    bot.send_privmsg(botOwner, msg.nick + " sent a private message: " + msg.data)
 
 
 ########################### Running Threads  ###########################
@@ -294,7 +316,7 @@ async def run_SendMessages():
                 logger.info(msg)
                 bot.send(msg)
                 last_message_time = time.time()
-        await asyncio.sleep(messageThrottleTime)
+        await asyncio.sleep(2)
 
 
 # Run the dgg bot
@@ -306,8 +328,12 @@ def run_bot():
 
 # Run the dgg live bot
 def run_live_bot():
-    logger.info("running live bot")
-    live.run_forever()
+    if DEVELOPMENT:
+        logger.info("not running live bot, dev mode")
+
+    else:
+        logger.info("running live bot")
+        live.run_forever()
 
 
 async def aioMain():
