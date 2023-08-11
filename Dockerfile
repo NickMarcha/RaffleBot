@@ -7,17 +7,14 @@ WORKDIR /app
 # Copy the requirements file into the container
 COPY /requirements.txt .
 
-# Copy the requirements file into the container
-#COPY ../config.json .
-
 # Install application dependencies
 RUN pip install -r requirements.txt
-
 
 # Copy the application code into the container
 COPY ./rafflebot .
 
-COPY ./config/config.json /config/config.json
+# Copy the config file into the container
+COPY $CONFIG_FILE_PATH /config/config.json
 
 ENV LOGLEVEL=DEBUG
 # Run the Python script
