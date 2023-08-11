@@ -9,11 +9,13 @@ import time
 import datetime
 import logging
 
+versionNumber = "0.0.1"
+########################### Logging ###########################
 logging.basicConfig(
     level=logging.INFO,  # Set the logging level to DEBUG
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler("app.log"),
+        logging.FileHandler("/logs/app.log"),
         logging.StreamHandler(),
     ],
 )
@@ -22,8 +24,9 @@ logger = logging.getLogger(__name__)
 
 current_timestamp = datetime.datetime.now()
 logger.info("Starting: %s", current_timestamp)
+logger.info("Version: %s", versionNumber)
 ########################### Config ###########################
-config_path = "config.json"
+config_path = "config/config.json"
 
 
 def load_json(file_path):
@@ -214,11 +217,11 @@ def on_refresh(msg):
 
 
 # Leaving this here for debug purposes
-# @bot.event()
-# def on_msg(msg):
-#     if msg.nick == "StrawWaffle":
-#         print("StrawWaffle")
-#         print(msg.data)
+@bot.event()
+def on_msg(msg):
+    if msg.nick == "StrawWaffle":
+        print("StrawWaffle")
+        print(msg.data)
 
 
 # Handle private messages towards the bot
