@@ -7,10 +7,11 @@ import json
 import time
 import datetime
 import logging
+import requests
 
 ########################### Version ###########################
-DEVELOPMENT = False
-# DEVELOPMENT = True
+# DEVELOPMENT = False
+DEVELOPMENT = True
 versionNumber = "0.0.2"
 
 
@@ -62,6 +63,7 @@ againstMalariaURL = config["againstMalariaURL"]
 watchedURL = config["watchedURL"]
 
 messageThrottleTime = config["messageThrottleTime"]
+raffleAPIURL = config["raffleAPIURL"]
 
 current_timestamp = datetime.datetime.now() - datetime.timedelta(
     seconds=messageThrottleTime
@@ -146,6 +148,67 @@ def isWhiteListedWithHandler(msg):
 # TODO: re-enable this when the bot is old enough to whisper
 # def dgg_whisper_broadcast_notify(msg):
 #    dgg_whisper_broadcast(msg, notifyUserList)
+
+
+################################ API REQUESTS #################################
+def get_json_from_api(api_url):
+    logger.debug("Making API request to: %s", api_url)
+    try:
+        response = requests.get(api_url)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+        json_data = response.json()  # Parse the response JSON
+        return json_data
+    except requests.exceptions.RequestException as e:
+        logger.warn("Error making the API request:", e)
+        return None
+    except json.JSONDecodeError as e:
+        logger.warn("Error parsing the JSON response:", e)
+        return None
+
+
+def get_json_from_raffle_api(api_path):
+    return get_json_from_api(raffleAPIURL + api_path)
+
+
+def get_raffle_todays_total():
+    data = get_json_from_raffle_api("/todaysTotal")
+    if data is not None:
+        return (
+            "PepoG Todays total: $"
+            + str(round(data["total"], 2))
+            + " YEE $"
+            + str(round(data["yeeTotal"], 2))
+            + " PEPE $"
+            + str(round(data["pepeTotal"], 2))
+        )
+    else:
+        return "Error getting raffle data"
+
+
+def get_raffle_overall_totals():
+    data = get_json_from_raffle_api("/total")
+    if data is not None:
+        return (
+            "PepoG Overall total: $"
+            + str(round(data["donationTotal"], 2))
+            + " count: "
+            + str(data["donationCount"])
+        )
+    else:
+        return "Error getting raffle data"
+
+
+def get_raffle_raffle_totals():
+    data = get_json_from_raffle_api("/total")
+    if data is not None:
+        return (
+            "PepoG Current pool total: $"
+            + str(round(data["raffleTotal"], 2))
+            + " count: "
+            + str(data["raffleDonationCount"])
+        )
+    else:
+        return "Error getting raffle data"
 
 
 ########################### Websocket Event Handlers ###########################
@@ -252,6 +315,27 @@ def amwatched(msg):
     logger.info("watched " + msg.nick)
     if isWhiteListedWithHandler(msg):
         msg.reply("Watched: " + watchedURL)
+
+
+@bot.command(aliases=["amtt"])
+def amtodaystotal(msg):
+    logger.info("todaystotal " + msg.nick)
+    if isWhiteListedWithHandler(msg):
+        msg.reply(get_raffle_todays_total())
+
+
+@bot.command(aliases=["amot"])
+def amoveralltotal(msg):
+    logger.info("overalltotal " + msg.nick)
+    if isWhiteListedWithHandler(msg):
+        msg.reply(get_raffle_overall_totals())
+
+
+@bot.command(aliases=["amrt"])
+def amraffletotal(msg):
+    logger.info("raffletotal " + msg.nick)
+    if isWhiteListedWithHandler(msg):
+        msg.reply(get_raffle_raffle_totals())
 
 
 ########################### Bot Event Handlers ###########################

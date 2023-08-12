@@ -3,6 +3,7 @@
   "botPrefix": "#",
   "botSecret": "Your Bots dgg login key, see https://www.omniliberal.dev/profile/developer",
   "raffleSocketURL": "http://localhost:3001",
+  "raffleAPIURL": "http://localhost:3001/api",
   "whiteListedUsers": ["randomUserOne", "Barrett"],
   "notifyUserList": ["randomAdminUserOne", "randomAdminUserTwo"],
   "statsURL": "https://docs.google.com/spreadsheets/d/e/[spreadsheetID]",

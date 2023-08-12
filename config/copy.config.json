@@ -3,6 +3,7 @@
   "botPrefix": "#",
   "botSecret": "Your Bots dgg login key, see https://www.destiny.gg/profile/developer",
   "raffleSocketURL": "raffledashboard.example.com/socket.io",
+  "raffleAPIURL": "raffledashboard.example.com/api",
   "whiteListedUsers": ["randomUserOne", "Barrett"],
   "notifyUserList": ["randomAdminUserOne", "randomAdminUserTwo"],
   "statsURL": "https://docs.google.com/spreadsheets/d/e/[spreadsheetID]",

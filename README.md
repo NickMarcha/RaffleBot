@@ -17,6 +17,7 @@ You can use `config/copy.config.json` to get started
 | `botPrefix` | Command prefix for dgg-bot | `#`
 | `botSecret` | Your Bots dgg login key, see [dgg/developer](https://www.destiny.gg/profile/developer) | `0imfnc8mVLWwsArandomrandomc8mVLWwsAawjYr4Rx` |
 | `raffleSocketURL` | socket.io endpoint | `raffledashboard.example.com/socket.io` |
+| `raffleAPIURL` | API endpoint | `raffledashboard.example.com/api` |
 | `whiteListedUsers` | users who can use commands and partake in private message broadcasts in dgg chat| `["randomUserOne", "Barrett"]` |
 | `notifyUserList` | users who are notified of things like raffle rolls in dgg chat | `["randomAdminUserOne", "randomAdminUserTwo"]` |
 | `statsURL` | used for command | `https://docs.google.com/spreadsheets/d/e/[spreadsheetID]` |
@@ -28,11 +29,14 @@ You can use `config/copy.config.json` to get started
 
 ### General Chat
 
-| command      | description                      | aliases |
-| ------------ | -------------------------------- | ------- |
-| `#amstats`   | replies with `statsURL`          | `#ams`  |
-| `#amdonate`  | replies with `againstMalariaURL` | `#amd`  |
-| `#amwatched` | replies with `againstMalariaURL` | `#amw`  |
+| command           | description                        | aliases |
+| ----------------- | ---------------------------------- | ------- |
+| `#amstats`        | replies with `statsURL`            | `#ams`  |
+| `#amdonate`       | replies with `againstMalariaURL`   | `#amd`  |
+| `#amwatched`      | replies with `againstMalariaURL`   | `#amw`  |
+| `#amtodaystotal`  | replies with todays totals         | `#amtt` |
+| `#amoveralltotal` | replies with overall totals        | `#amot` |
+| `#amraffletotal`  | replies with current raffle totals | `#amrt` |
 
 ### Whisper Chat
 
