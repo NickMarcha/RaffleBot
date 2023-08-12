@@ -10,9 +10,9 @@ import logging
 import requests
 
 ########################### Version ###########################
-# DEVELOPMENT = False
-DEVELOPMENT = True
-versionNumber = "0.0.2"
+DEVELOPMENT = False
+# DEVELOPMENT = True
+versionNumber = "0.0.3"
 
 
 ########################### Logging ###########################
@@ -300,42 +300,42 @@ def on_streaminfo(streaminfo: StreamInfo):
 def amstats(msg):
     logger.info("stats " + msg.nick)
     if isWhiteListedWithHandler(msg):
-        msg.reply("Stats: " + statsURL)
+        messageQueue.put("Stats: " + statsURL)
 
 
 @bot.command(alias=["amd"])
 def amdonate(msg):
     logger.info("donate " + msg.nick)
     if isWhiteListedWithHandler(msg):
-        msg.reply("Donate: " + againstMalariaURL)
+        messageQueue.put("Donate: " + againstMalariaURL)
 
 
 @bot.command(aliases=["amw"])
 def amwatched(msg):
     logger.info("watched " + msg.nick)
     if isWhiteListedWithHandler(msg):
-        msg.reply("Watched: " + watchedURL)
+        messageQueue.put("Watched: " + watchedURL)
 
 
 @bot.command(aliases=["amtt"])
 def amtodaystotal(msg):
     logger.info("todaystotal " + msg.nick)
     if isWhiteListedWithHandler(msg):
-        msg.reply(get_raffle_todays_total())
+        messageQueue.put(get_raffle_todays_total())
 
 
 @bot.command(aliases=["amot"])
 def amoveralltotal(msg):
     logger.info("overalltotal " + msg.nick)
     if isWhiteListedWithHandler(msg):
-        msg.reply(get_raffle_overall_totals())
+        messageQueue.put(get_raffle_overall_totals())
 
 
 @bot.command(aliases=["amrt"])
 def amraffletotal(msg):
     logger.info("raffletotal " + msg.nick)
     if isWhiteListedWithHandler(msg):
-        msg.reply(get_raffle_raffle_totals())
+        messageQueue.put(get_raffle_raffle_totals())
 
 
 ########################### Bot Event Handlers ###########################
@@ -356,24 +356,32 @@ def on_msg(msg):
         print(msg.data)
 
 
-# TODO: re-enable this when the bot is old enough to whisper
 # Handle private messages towards the bot
-# @bot.event()
-# def on_privmsg(msg):
-#    logger.info("on_privmsg")
-#    if isWhiteListed:
-#        if msg.data.split()[0] == "#bc":
-#            bcmsg = msg.data[4:]
-#            dgg_whisper_broadcast_whitelist(msg.nick + ": " + bcmsg)
-#        else:
-#            bot.send_privmsg(msg.nick, "You can broadcast messages with !bc <message>")
-#    else:
-#        bot.send_privmsg(
-#            msg.nick,
-#            "FeelsDankMan I'm a bot. I'm not allowed to reply to private messages. Maybe try gpt71?",
-#        )
-#
-#    bot.send_privmsg(botOwner, msg.nick + " sent a private message: " + msg.data)
+@bot.event()
+def on_privmsg(msg):
+    logger.info("on_privmsg")
+    if isWhiteListed(msg.nick):
+        command = msg.data.split()[0]
+        match command:
+            case "#bc":
+                if msg.nick == botOwner:
+                    bcmsg = msg.data[4:]
+                    messageQueue.put(bcmsg)
+                else:
+                    logger.info("User " + msg.nick + " tried to use #bc")
+            case "#wc":
+                # TODO: re-enable this when the bot is old enough to whisper
+                # dgg_whisper_broadcast_whitelist(msg.nick + ": " + bcmsg)
+                pass
+            case _:
+                pass
+    else:
+        pass
+        # TODO: re-enable this when the bot is old enough to whisper
+        # bot.send_privmsg(
+        #     msg.nick,
+        #     "FeelsDankMan I'm a bot. I'm not allowed to reply to private messages. Maybe try gpt71?",
+        # )
 
 
 ########################### Running Threads  ###########################
