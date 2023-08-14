@@ -7,7 +7,7 @@ services:
     image: python-app
     container_name: raffle-bot-container
     environment:
-      - CONFIG_FILE_PATH=/config/config.json
+      - CONFIG_FILE_PATH=/config.json
     volumes:
-      - ${CONFIG_FILE_PATH}:/config/config.json
+      - ${CONFIG_FILE_PATH}:/config.json
 

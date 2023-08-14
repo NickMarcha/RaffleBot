@@ -37,9 +37,9 @@ logger.info("Development: %s", DEVELOPMENT)
 
 ########################### Config ###########################
 if DEVELOPMENT:
-    config_path = "config/dev.config.json"
+    config_path = "dev.config.json"
 else:
-    config_path = "config/config.json"
+    config_path = "config.json"
 
 
 def load_json(file_path):

@@ -15,7 +15,7 @@ RUN mkdir logs
 COPY main.py .
 
 # Copy the config file into the container
-COPY ./config/config.json ./config/config.json
+COPY config.json .
 
 ENV LOGLEVEL=DEBUG
 # Run the Python script
