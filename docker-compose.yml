@@ -1,9 +1,6 @@
 version: "3.8"
 services:
   python-app:
-    build:
-      context: ./  # Adjust the build context to point to the parent directory
-      dockerfile: Dockerfile  # Specify the path to the Dockerfile within the context
     image: python-app
     container_name: raffle-bot-container
     environment:
