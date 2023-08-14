@@ -5,17 +5,18 @@ FROM python:3.11.4
 WORKDIR /app
 
 # Copy the requirements file into the container
-COPY /requirements.txt .
+COPY requirements.txt .
 
 # Install application dependencies
 RUN pip install -r requirements.txt
+RUN mkdir logs
 
 # Copy the application code into the container
-COPY ./rafflebot .
+COPY main.py .
 
 # Copy the config file into the container
-COPY $CONFIG_FILE_PATH /config/config.json
+COPY ./config/config.json ./config/config.json
 
 ENV LOGLEVEL=DEBUG
 # Run the Python script
-CMD ["python", "rafflebot/main.py"]
+CMD ["python", "main.py"]
