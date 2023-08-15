@@ -349,11 +349,11 @@ def on_refresh(msg):
 
 
 # Leaving this here for debug purposes
-@bot.event()
-def on_msg(msg):
-    if msg.nick == botOwner:
-        print(botOwner)
-        print(msg.data)
+#@bot.event()
+#def on_msg(msg):
+#    if msg.nick == botOwner:
+#        print(botOwner)
+#        print(msg.data)
 
 
 # Handle private messages towards the bot
@@ -394,7 +394,7 @@ async def run_socket():
     await sio.wait()
 
 
-# Send messages from the queue every 60 seconds
+# Checks to send a message every 2 seconds, sends message depending on throttle time and if destiny is live
 async def run_SendMessages():
     global last_message_time
     while True:
@@ -413,13 +413,14 @@ async def run_SendMessages():
 
 # Run the dgg bot
 def run_bot():
-    global bot  # Declare destinyIsLive as a global variable
+    global bot  # Declare bot as a global variable
     logger.info("connecting bot")
     bot.run_forever()
 
 
 # Run the dgg live bot
 def run_live_bot():
+    global live  # Declare live as a global variable
     if DEVELOPMENT:
         logger.info("not running live bot, dev mode")
 
