@@ -12,7 +12,7 @@ import requests
 ########################### Version ###########################
 DEVELOPMENT = False
 # DEVELOPMENT = True
-versionNumber = "0.0.3"
+versionNumber = "0.0.4"
 
 
 ########################### Logging ###########################
