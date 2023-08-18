@@ -12,7 +12,7 @@ import requests
 ########################### Version ###########################
 DEVELOPMENT = False
 # DEVELOPMENT = True
-versionNumber = "0.0.4"
+versionNumber = "0.0.5"
 
 
 ########################### Logging ###########################
@@ -349,8 +349,8 @@ def on_refresh(msg):
 
 
 # Leaving this here for debug purposes
-#@bot.event()
-#def on_msg(msg):
+# @bot.event()
+# def on_msg(msg):
 #    if msg.nick == botOwner:
 #        print(botOwner)
 #        print(msg.data)
@@ -420,7 +420,7 @@ def run_bot():
 
 # Run the dgg live bot
 def run_live_bot():
-    global live  # Declare live as a global variable
+    # live  # Declare live as a global variable # Not needed live is a function not an object
     if DEVELOPMENT:
         logger.info("not running live bot, dev mode")
 
